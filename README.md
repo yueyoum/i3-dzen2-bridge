@@ -21,6 +21,10 @@ this script simple bridged the i3status and dzen2.
 
     eg. `cd /usr/local/bin; sudo ln -s <PATH>/i3dzen2.sh i3dzen2`
 
+3.  `cp i3status.conf ~/.i3status.conf`
+4.  start: `i3dzen2`
+5.  add i3dzen2 in your startup applications
+
 
 
 ![i3-dzen-bridge-1](http://i1297.photobucket.com/albums/ag23/yueyoum/dzen2-s_zps6c50c408.png)
