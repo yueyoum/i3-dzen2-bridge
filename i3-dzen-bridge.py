@@ -9,6 +9,7 @@ Author: Wang Chao <https://github.com/yueyoum>
 
 import sys
 import os
+import re
 
 PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
 
@@ -35,8 +36,41 @@ REPLACE_ITEM = {
 }.items()
 
 
+COLORS = {
+    'GREEN' : '^fg(#00FF00)',
+    'YELLOW': '^fg(#FFFF00)',
+    'RED'   : '^fg(#FF0000)',
+}
+
+CPU_PATTERN = re.compile('_U:\s+(\d{2,3})%')
+TEMP_PATTERN = re.compile('_T:\s+(\d+)\s?')
+
+
+def get_color(t):
+    if t < 50:
+        color = COLORS['GREEN']
+    elif t < 80:
+        color = COLORS['YELLOW']
+    else:
+        color = COLORS['RED']
+    return color
+
+
 while True:
     line = raw_input()
+    cpu_usage = CPU_PATTERN.search(line).groups()[0]
+    origin_cpu_text = CPU_PATTERN.search(line).group()
+    new_cpu_text = get_color(int(cpu_usage)) + origin_cpu_text
+
+    line = line.replace(origin_cpu_text, new_cpu_text)
+
+    temperature = TEMP_PATTERN.search(line).groups()[0]
+    origin_temp_text = TEMP_PATTERN.search(line).group()
+    new_temp_text = get_color(int(temperature)) + origin_temp_text
+
+    line = line.replace(origin_temp_text, new_temp_text)
+
+
     for k, v in REPLACE_ITEM:
         line = line.replace(k, v)
 
