@@ -57,19 +57,25 @@ def get_color(t):
 
 
 while True:
-    line = raw_input()
-    cpu_usage = CPU_PATTERN.search(line).groups()[0]
-    origin_cpu_text = CPU_PATTERN.search(line).group()
-    new_cpu_text = get_color(int(cpu_usage)) + origin_cpu_text
+    # Fix Python 2.x.
+    try: input = raw_input
+    except NameError: pass
 
-    line = line.replace(origin_cpu_text, new_cpu_text)
+    line = input()
 
-    temperature = TEMP_PATTERN.search(line).groups()[0]
-    origin_temp_text = TEMP_PATTERN.search(line).group()
-    new_temp_text = get_color(int(temperature)) + origin_temp_text
+    cpu_usage_matches = CPU_PATTERN.search(line)
+    if cpu_usage_matches is not None:
+        cpu_usage = cpu_usage_matches.groups()[0]
+        origin_cpu_text = cpu_usage_matches.group()
+        new_cpu_text = get_color(int(cpu_usage)) + origin_cpu_text
+        line = line.replace(origin_cpu_text, new_cpu_text)
 
-    line = line.replace(origin_temp_text, new_temp_text)
-
+    temperature_matches = TEMP_PATTERN.search(line)
+    if temperature_matches is not None:
+        temperature = temperature_matches.groups()[0]
+        origin_temp_text = temperature_matches.group()
+        new_temp_text = get_color(int(temperature)) + origin_temp_text
+        line = line.replace(origin_temp_text, new_temp_text)
 
     for k, v in REPLACE_ITEM:
         line = line.replace(k, v)
